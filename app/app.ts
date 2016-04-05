@@ -1,6 +1,5 @@
 import {App, Platform} from "ionic-angular";
 import {Http, HTTP_PROVIDERS} from "angular2/http";
-import {UserDataService} from "./providers/userDataService";
 
 import {GenericGitHubDataService} from "./providers/genericGitHubDataService";
 import {TranslatorsDataService} from "./providers/translatorsDataService";
@@ -9,19 +8,18 @@ import {OnboardingDataService} from "./providers/onboardingDataService";
 import {SearchDataService} from "./providers/searchDataService";
 import {OpenT2TBridgeService} from "./providers/opent2tBridgeService";
 
-import {SignInPage} from "./pages/signInPage/signInPage";
-import {WinkOnboardingPage} from "./pages/onboarding/winkOnboardingPage/winkOnboardingPage";
+import {TabsPage} from "./pages/tabs/tabs";
 
 // https://angular.io/docs/ts/latest/api/core/Type-interface.html
 import {Type} from "angular2/core";
 
 @App({
     templateUrl: "build/app.html",
-    providers: [ OpenT2TBridgeService, UserDataService, GenericGitHubDataService, TranslatorsDataService, VoiceHandlersDataService, SearchDataService, OnboardingDataService ],
+    providers: [ OpenT2TBridgeService, GenericGitHubDataService, TranslatorsDataService, VoiceHandlersDataService, SearchDataService, OnboardingDataService ],
     config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
 export class MyApp {
-    rootPage: Type = SignInPage;
+    rootPage: Type = TabsPage;
 
     constructor(platform: Platform) {
         platform.ready().then(() => {

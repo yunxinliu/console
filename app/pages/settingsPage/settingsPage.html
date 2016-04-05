@@ -6,24 +6,6 @@
 
 <ion-content padding>
 
-    <!--User Info-->
-    <ion-card>
-        <ion-card-header>
-            <ion-avatar item-left>
-                <img src="{{user.avatarUrl}}">
-            </ion-avatar>
-            <h2>{{user.userName}}</h2>
-        </ion-card-header>
-        <ion-card-content>
-            <ion-list no-lines>
-                <button danger small (click)="signOut()">Sign Out</button>
-            </ion-list>
-            <ion-note>
-                {{user.profileUrl}}
-            </ion-note>
-        </ion-card-content>
-    </ion-card>
-
     <!--Browse Github-->
     <ion-card>
         <ion-card-header>

@@ -1,7 +1,6 @@
 import {Injectable} from "angular2/core";
 import {Http, HTTP_PROVIDERS, Response, Headers, RequestOptions} from "angular2/http";
 import "rxjs/Rx";
-import {UserDataService} from "./userDataService";
 import {GitHubFileItem} from "../model/gitHub/gitHubFileItem";
 import {GitHubFileContentItem} from "../model/gitHub/gitHubFileContentItem";
 
@@ -9,13 +8,13 @@ import {GitHubFileContentItem} from "../model/gitHub/gitHubFileContentItem";
 export class GenericGitHubDataService {
 
     // ctor
-    constructor(private http: Http, private userDataService: UserDataService) {
+    constructor(private http: Http) {
     }
 
     // initiates getting the list of directories inside a repository Url.
     public initiateGetDirectoriesInPath(repositoryApiUrl: string): Promise<string[]> {
 
-    return this.http.get(repositoryApiUrl, this.userDataService.httpAuthOptions())
+    return this.http.get(repositoryApiUrl)
             .toPromise()
             .then((res) => {
                 return this.handleGetDirectoriesInPath(res);
@@ -49,7 +48,7 @@ export class GenericGitHubDataService {
     // initiates getting the list of directories and files inside a repository Url.
     public initiateGetDirectoriesAndFilesInPath(repositoryApiUrl: string): Promise<string[]> {
 
-        return this.http.get(repositoryApiUrl, this.userDataService.httpAuthOptions())
+        return this.http.get(repositoryApiUrl)
             .toPromise()
             .then((res) => {
                 return this.handleGetDirectoriesAndFilesInPath(res);
@@ -82,7 +81,7 @@ export class GenericGitHubDataService {
     // initiates getting the list of file inside a repository Url.
     public initiateGetFilesInPath(repositoryApiUrl: string): Promise<string[]> {
 
-        return this.http.get(repositoryApiUrl, this.userDataService.httpAuthOptions())
+        return this.http.get(repositoryApiUrl)
             .toPromise()
             .then((res) => {
                 return this.handleGetFilesInPath(res);
@@ -115,7 +114,7 @@ export class GenericGitHubDataService {
     // initiates getting the file content from a repository Url.
     public initiateGetFileContentInPath(repositoryApiUrl: string): Promise<string> {
 
-        return this.http.get(repositoryApiUrl, this.userDataService.httpAuthOptions())
+        return this.http.get(repositoryApiUrl)
             .toPromise()
             .then((res) => {
                 return this.handleGetFileContentInPath(res);
