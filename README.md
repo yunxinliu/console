@@ -85,6 +85,12 @@ $ ionic run windows --archs=x64
 After a successful build, you can also open the CordovaApp.sln file under platforms\windows in Visual Studio 2015, set the 
 CordovaApp.Windows10 project as startup, and then just run from within Visual Studio. This is helpful for debugging.
 
+## Service Configuration
+
+This app requires some API secrets from external services. Configure them here, if you want to use these services:
+
+1. Wink API: app/pages/onboarding/winkOnboardingPage/winkConfig.ts
+
 ## Common Development Workflows
 
 Here are some workflows you might find useful during development:
