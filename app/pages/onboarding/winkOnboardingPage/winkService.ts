@@ -115,16 +115,11 @@ export class WinkService {
 
             let response: WinkDeviceEnumerationResponse = JSON.parse(res.text());
 
-            console.log("Full device list: " + JSON.stringify(response));
-            console.log("Filtering by: " + idKeyFilter);
-
             // filter down to devices that have the specified ID Key filter
             // (e.g. light_bulb_id if we are looking for lightbulbs)
             this.devices = response.data.filter((WinkDevice) => {
                 return !!WinkDevice[idKeyFilter];
             });
-
-            console.log("Filtered device list: " + this.devices);
 
             console.log("Success: Devices enumerated");
 

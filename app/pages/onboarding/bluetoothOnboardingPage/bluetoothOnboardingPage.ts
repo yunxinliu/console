@@ -37,7 +37,8 @@ export class BluetoothOnboardingPage extends OnboardingPageBase implements OnIni
 
     // event handler for page init
     ngOnInit() {
-
+        super.ngOnInit();
+        
         // start the bluetooth watcher
         this.bleDeviceWatcherService.start()
             .then(() => {

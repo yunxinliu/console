@@ -44,6 +44,7 @@ export class WinkOnboardingPage extends OnboardingPageBase implements OnInit {
 
     // event handler for page init
     ngOnInit() {
+        super.ngOnInit();
     }
 
     // event handler for form submission
@@ -67,7 +68,7 @@ export class WinkOnboardingPage extends OnboardingPageBase implements OnInit {
     }
 
     // shows an doAlert.
-    showdoAlert(message) {
+    showAlert(message) {
         doAlert(message);
     }
 

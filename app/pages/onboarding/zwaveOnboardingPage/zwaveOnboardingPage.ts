@@ -41,6 +41,7 @@ export class ZWaveOnboardingPage extends OnboardingPageBase implements OnInit {
 
     // event handler for page init
     ngOnInit() {
+        super.ngOnInit();
         this.zwaveDeviceWatcherService.start(this.scanCallback.bind(this), this.handleCordovaError.bind(this));
     }
 
