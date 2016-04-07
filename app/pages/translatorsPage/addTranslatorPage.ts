@@ -52,26 +52,44 @@ export class AddTranslatorPage implements OnInit {
                 console.log("Fetched files for device: " + device);
                 console.log(JSON.stringify(files));
 
-                if (!files.onboarding) {
-                    doAlert("Onboarding method not found. Please select another device");
-                }
-                else if (files.onboarding.endsWith("BluetoothLE.xml")) {
-                    this.nav.push(BluetoothOnboardingPage, { files: files });
-                }
-                else if (files.onboarding.endsWith("ZWave.xml")) {
-                    this.nav.push(ZWaveOnboardingPage, { files: files });
-                }
-                else if (files.onboarding.endsWith("WinkHub.xml")) {
-                    this.nav.push(WinkOnboardingPage, { files: files, idKeyFilter: "light_bulb_id" });
-                }
-                else {
-                    doAlert("Onboarding method not supported. Please select another device");
-                }
+                // download the manifest so we can provide the right context to onboarding
+                this.searchDataService.initiateGetFileContent(files.manifest)
+                    .then((manifestContent) => {
 
+                        if (!files.onboarding) {
+                            doAlert("Onboarding method not found. Please select another device");
+                        }
+                        else if (files.onboarding.endsWith("BluetoothLE.xml")) {
+                            this.nav.push(BluetoothOnboardingPage, { files: files });
+                        }
+                        else if (files.onboarding.endsWith("ZWave.xml")) {
+                            this.nav.push(ZWaveOnboardingPage, { files: files });
+                        }
+                        else if (files.onboarding.endsWith("WinkHub.xml")) {
+
+                            var idKeyValue = this.getOnboardingValue(manifestContent, "idKeyFilter");
+                            console.log('id key value: ' + idKeyValue);
+
+                            this.nav.push(WinkOnboardingPage, { files: files, idKeyFilter: idKeyValue });
+                        }
+                        else {
+                            doAlert("Onboarding method not supported. Please select another device");
+                        }
+                    });
             }).catch((err) => {
                 // there was an error. display it on screen.
                 console.log(err.text());
                 doAlert(err.text());
             });
+    }
+
+    // find the onboarding value with the given name any better way to do it using regex?
+    getOnboardingValue(manifestContent: string, argName: string): string {
+        var searchString = '<arg name="' + argName + '" value=';
+        let searchStringEnd = manifestContent.search(searchString) + searchString.length;
+        let foreStripped = manifestContent.substring(searchStringEnd + 1);
+        searchStringEnd = foreStripped.search('"');
+        var endStripped = foreStripped.substring(0, searchStringEnd);
+        return endStripped;
     }
 }
