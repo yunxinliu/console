@@ -1,7 +1,7 @@
 import {Page, NavController, NavParams} from "ionic-angular";
 import {OnInit} from "angular2/core";
 import {OnboardingDataService} from "../../../providers/onboardingDataService";
-import {OnboardingFileContentPage} from "../onboardingFileContentPage/onboardingFileContentPage";
+import {FileContentPage} from "../fileContentPage/fileContentPage";
 import {OnboardingMethodNodePage} from "../onboardingMethodNodePage/onboardingMethodNodePage";
 import {doAlert} from "../../../model/utils";
 
@@ -35,7 +35,18 @@ export class OnboardingMethodPage implements OnInit {
 
   browseItem(item: string) {
     if (item.endsWith(".xml")) // it"s the XML file
-      this.nav.push(OnboardingFileContentPage, {path: this.name + "/" + item, name: item});
+    {
+      let path = this.name + "/" + item;
+      let data: string = null;
+      this.onboardingDataService.initiateGetFileContent(path)
+          .then((result) => {
+            data = result;
+            this.nav.push(FileContentPage, {name: item, content: data});
+          }).catch((err) => {
+              console.log(err.text());
+              doAlert(err.text());
+          });      
+    }
     else
       this.nav.push(OnboardingMethodNodePage, {method: this.name, name: item});
   }

@@ -3,7 +3,6 @@ import {OnInit} from "angular2/core";
 import {TranslatorsDataService} from "../../../providers/translatorsDataService";
 import {FileContentPage} from "../fileContentPage/fileContentPage";
 import {SearchDataService} from "../../../providers/searchDataService";
-import {SearchFileContentPage} from "../searchFileContentPage/searchFileContentPage";
 import {doAlert} from "../../../model/utils";
 
 @Page({
@@ -49,11 +48,27 @@ export class ThingPage implements OnInit {
 
   browseFile(f: string) {
     let path = this.schema + "/" + this.name + "/js/" + f;
-    this.nav.push(FileContentPage, {path: path, name: f});
+    let data: string = null;
+    this.translatorsDataService.initiateGetFileContent(path)
+        .then((result) => {
+          data = result;
+          this.nav.push(FileContentPage, {name: f, content: data});
+        }).catch((err) => {
+            console.log(err.text());
+            doAlert(err.text());
+        });
   }
 
   browseSearchedFile(f: string) {
-    this.nav.push(SearchFileContentPage, {path: f, name: f});
+    let data: string = null;
+    this.searchDataService.initiateGetFileContent(f)
+        .then((result) => {
+          data = result;
+          this.nav.push(FileContentPage, {name: f, content: data});
+        }).catch((err) => {
+            console.log(err.text());
+            doAlert(err.text());
+        });
   }
 
 }

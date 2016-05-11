@@ -1,7 +1,7 @@
 import {Page, NavController, NavParams} from "ionic-angular";
 import {OnInit} from "angular2/core";
 import {OnboardingDataService} from "../../../providers/onboardingDataService";
-import {OnboardingFileContentPage} from "../onboardingFileContentPage/onboardingFileContentPage";
+import {FileContentPage} from "../fileContentPage/fileContentPage";
 import {doAlert} from "../../../model/utils";
 
 @Page({
@@ -34,7 +34,15 @@ export class OnboardingMethodNodePage implements OnInit {
 
   browseFile(f: string) {
     let path = this.method + "/node/" + f;
-    this.nav.push(OnboardingFileContentPage, {path: path, name: f});
+    let data: string = null;
+    this.onboardingDataService.initiateGetFileContent(path)
+        .then((result) => {
+          data = result;
+          this.nav.push(FileContentPage, {name: f, content: data});
+        }).catch((err) => {
+            console.log(err.text());
+            doAlert(err.text());
+        });
   }
 
 }

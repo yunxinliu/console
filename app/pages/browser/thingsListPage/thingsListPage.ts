@@ -35,8 +35,18 @@ export class ThingsListPage implements OnInit {
   }
 
   browseThing(t: string) {
-    if (t.endsWith(".xml"))
-      this.nav.push(FileContentPage, {path: this.schema + "/" + t, name: t});
+    if (t.endsWith(".xml")) {
+      let path = this.schema + "/" + t;
+      let data: string = null;
+      this.translatorsDataService.initiateGetFileContent(path)
+          .then((result) => {
+            data = result;
+            this.nav.push(FileContentPage, {name: t, content: data});
+          }).catch((err) => {
+              console.log(err.text());
+              doAlert(err.text());
+          });
+    }
     else
       this.nav.push(ThingPage, {schema: this.schema, name: t});
   }

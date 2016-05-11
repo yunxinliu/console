@@ -1,7 +1,7 @@
 import {Page, NavController, NavParams} from "ionic-angular";
 import {OnInit} from "angular2/core";
 import {VoiceHandlersDataService} from "../../../providers/voiceHandlersDataService";
-import {VoiceHandlerFileContentPage} from "../voiceHandlerFileContentPage/voiceHandlerFileContentPage";
+import {FileContentPage} from "../fileContentPage/fileContentPage";
 import {doAlert} from "../../../model/utils";
 
 @Page({
@@ -36,7 +36,15 @@ export class VoiceHandlerPage implements OnInit {
 
   browseFile(f: string) {
     let path = this.type + "/" + this.name + "/" + f;
-    this.nav.push(VoiceHandlerFileContentPage, {path: path, name: f});
+    let data: string = null;
+    this.voiceHandlersDataService.initiateGetVoiceHandlersFileContent(path)
+        .then((result) => {
+          data = result;
+          this.nav.push(FileContentPage, {name: f, content: data});
+        }).catch((err) => {
+            console.log(err.text());
+            doAlert(err.text());
+        });
   }
 
 }
