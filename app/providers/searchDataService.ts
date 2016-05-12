@@ -94,19 +94,20 @@ export class SearchDataService {
             })
             .then(() => {
                 // find the voice name; any better way to do it using regex?
-                let x = manifestContent.search("<voice id=");
-                let str = manifestContent.substring(x);
-                x = str.search("\"");
-                str = str.substring(x + 1);
-                let y = str.search("\"");
-                voiceName = str.substring(0, y);
+                let pattern: RegExp = /<\s*voice\s*id\s*=\s*".*"/;
+                voiceName = this.getValueByRegExp(manifestContent, pattern);
 
-                return this.genericGitHubDataService.initiateGetDirectoriesInPath(this.VOICE_BASEURL + "/Cortana")
-                    .then((data) => {
-                        voices = data;
-                    }).catch((err) => {
-                        return Promise.reject<ThingFiles>(err);
-                    });
+                if (voiceName === null) {
+                    return;
+                }
+                else {
+                    return this.genericGitHubDataService.initiateGetDirectoriesInPath(this.VOICE_BASEURL + "/Cortana")
+                        .then((data) => {
+                            voices = data;
+                        }).catch((err) => {
+                            return Promise.reject<ThingFiles>(err);
+                        });
+                }
             })
             .then(() => {
                 for (let i = 0; i < voices.length; i++) {
@@ -128,14 +129,10 @@ export class SearchDataService {
             })
             .then(() => {
                 // search for the onboarding method file
-                let x = manifestContent.search("<onboarding id=");
-                let str = manifestContent.substring(x);
-                x = str.search("\"");
-                str = str.substring(x + 1);
-                let y = str.search("\"");
-                let method = str.substring(0, y);
+                let pattern: RegExp = /<\s*onboarding\s*id\s*=\s*"org\.OpenT2T\..+"/;
+                let method = this.getValueByRegExp(manifestContent, pattern);
 
-                if (method === undefined) {
+                if (method === null) {
                     return;
                 }
                 else {
@@ -165,4 +162,20 @@ export class SearchDataService {
     public initiateGetFileContent(path: string): Promise<string> {
         return this.genericGitHubDataService.initiateGetFileContentInPath("https://api.github.com/repos/opent2t/" + path);
     }
+    
+    // find an element id value from a manifest xml using RegExp
+    getValueByRegExp(manifest: string, pattern: RegExp): string {
+        let match: RegExpExecArray = pattern.exec(manifest);
+        let result: string = null;
+
+        if (!match) return null;
+
+        result = match[0]; // we return only the first match
+        let x: number = result.search("\"");
+        result = result.substring(x + 1, result.length - 1);
+        result = result.trim();
+
+        return result;
+    }
+
 }

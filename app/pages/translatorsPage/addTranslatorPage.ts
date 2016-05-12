@@ -66,8 +66,8 @@ export class AddTranslatorPage implements OnInit {
                             this.nav.push(ZWaveOnboardingPage, { files: files });
                         }
                         else if (files.onboarding.endsWith("WinkHub.xml")) {
-
-                            var idKeyValue = this.getOnboardingValue(manifestContent, "idKeyFilter");
+                            let pattern: RegExp = /<\s*arg\s*name\s*=\s*"\s*idKeyFilter\s*"\s*value\s*=\s*".+"/;
+                            let idKeyValue: string = this.getOnboardingValue(manifestContent, pattern);
                             console.log('id key value: ' + idKeyValue);
 
                             this.nav.push(WinkOnboardingPage, { files: files, idKeyFilter: idKeyValue });
@@ -83,13 +83,23 @@ export class AddTranslatorPage implements OnInit {
             });
     }
 
-    // find the onboarding value with the given name any better way to do it using regex?
-    getOnboardingValue(manifestContent: string, argName: string): string {
-        var searchString = '<arg name="' + argName + '" value=';
-        let searchStringEnd = manifestContent.search(searchString) + searchString.length;
-        let foreStripped = manifestContent.substring(searchStringEnd + 1);
-        searchStringEnd = foreStripped.search('"');
-        var endStripped = foreStripped.substring(0, searchStringEnd);
-        return endStripped;
+    // find the onboarding value with the given name
+    getOnboardingValue(manifestContent: string, pattern: RegExp): string {
+        let match: RegExpExecArray = pattern.exec(manifestContent);
+        let result: string = null;
+        if (!match) return null;
+
+        result = match[0]; // we return only the first match
+        let p: RegExp = /value\s*=\s*".+"/; // find the value part
+        match = p.exec(result);
+        if (!match) return null;
+
+        result = match[0]; // there should be only one match
+        let x: number = result.search("\"");
+        result = result.substring(x + 1, result.length - 1);
+        result = result.trim();
+
+        return result;
+
     }
 }
